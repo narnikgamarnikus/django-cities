@@ -226,7 +226,7 @@ class City(BaseCity):
 
     def __str__(self):
         if self.alt_names.filter(language_code=get_language()).count() > 1:
-            return ', '.join([i.name for i in self.alt_names.objects.filter(language_code=get_language()).all()])
+            return ', '.join([i.name for i in self.alt_names.filter(language_code=get_language()).all()])
         else:
             return self.alt_names.filter(language_code=get_language()).first().name
 
