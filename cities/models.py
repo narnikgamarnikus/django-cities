@@ -18,6 +18,9 @@ from .conf import (ALTERNATIVE_NAME_TYPES, SLUGIFY_FUNCTION)
 from .managers import AlternativeNameManager
 from .util import unicode_func
 
+from django.utils.translation import get_language
+
+
 __all__ = [
     'Point', 'Continent', 'Country', 'Region', 'Subregion', 'City', 'District',
     'PostalCode', 'AlternativeName',
@@ -221,6 +224,11 @@ class City(BaseCity):
     class Meta(BaseCity.Meta):
         swappable = swapper.swappable_setting('cities', 'City')
 
+    def __str__(self):
+        if self.alt_names.objects.filter(language_code=get_language()).count() > 1:
+            return ', '.join([i.name for i in self.alt_names.objects.filter(language_code=get_language()).all()])
+        else:
+            return self.alt_names.objects.filter(language_code=get_language()).first().name
 
 class District(Place, SlugModel):
     slug_contains_id = True
